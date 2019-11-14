@@ -30,7 +30,7 @@ class App extends Component {
     const {lists, allCards} = this.state.store;
     
     const newLists = lists.map(list =>  ({
-      list,
+      ...list,
       cardIds: list.cardIds.filter(id => id !== cardId)
     }));
     console.log(newLists)
