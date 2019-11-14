@@ -3,22 +3,55 @@ import List from './List'
 import './App.css';
 import STORE from './STORE';
 
+const newRandomCard = () => {
+  const id = Math.random().toString(36).substring(2, 4)
+  + Math.random().toString(36).substring(2, 4);
+return {
+  id,
+  title: `Random Card ${id}`,
+  content: 'lorem ipsum',
+  }
+}
+
+function omit(obj, keyToOmit) {
+  return Object.entries(obj).reduce(
+    (newObj, [key, value]) =>
+        key === keyToOmit ? newObj : {...newObj, [key]: value},
+    {}
+  );
+}
 class App extends Component {
   state = {
-    lists: STORE.lists,
-    allCards: STORE.allCards
+    store: STORE,
   }
 
-  handleDeleteCard() {
+  handleDeleteCard = (cardId) => {
     console.log('handle delete card called')
+    const {lists, allCards} = this.state.store;
+    
+    const newLists = lists.map(list =>  ({
+      list,
+      cardIds: list.cardIds.filter(id => id !== cardId)
+    }));
+    console.log(newLists)
+
+    const newCards = omit(allCards, cardId);
+    console.log(newCards)
+
+    this.setState({
+      store: {
+        lists: newLists,
+        allCards: newCards
+      }
+    })
   }
 
-  handleAddRandomCard() {
+  handleAddRandomCard = () => {
     console.log('handle add random card called')
   }
 
   render() {
-    const { store } = this.props
+    const { store } = this.state
     return (
       <main className='App'>
         <header className='App-header'>
